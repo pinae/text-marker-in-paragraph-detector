@@ -1,0 +1,8 @@
+numpy
+pillow
+vegas
+altair
+jupyter
+tensorflow
+keras
+sacred
