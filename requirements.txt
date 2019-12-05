@@ -1,6 +1,8 @@
 numpy
+pandas
 pillow
-vegas
+pycairo
+vega
 altair
 jupyter
 tensorflow
