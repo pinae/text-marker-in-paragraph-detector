@@ -8,3 +8,4 @@ jupyter
 tensorflow
 keras
 sacred
+scikit-image
