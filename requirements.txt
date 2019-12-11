@@ -9,3 +9,6 @@ tensorflow
 keras
 sacred
 scikit-image
+wand
+flask
+pypdf2

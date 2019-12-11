@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 from skimage.draw import rectangle
+from PIL import Image
 import numpy as np
 import random
 import cairo
+from wand.image import Image as WImage
 
 
 def area_mask(arr, mask_rect):
@@ -78,8 +80,20 @@ def convert_to_numpy(surf):
     return converted_array
 
 
+def extract_pdf_page(filename, page_no=0):
+    wimg = WImage(filename=filename + '[' + str(page_no) + ']', resolution=100)
+    nparr = np.array(wimg)
+    return nparr.reshape([nparr.shape[1], nparr.shape[0], *nparr.shape[2:]])
+
+
+def compress_and_write_image(arr, fp):
+    rgba_img = Image.fromarray(arr, 'RGBA')
+    background = Image.new("RGB", rgba_img.size, (255, 255, 255))
+    background.paste(rgba_img, mask=rgba_img.split()[3])
+    background.save(fp, format='JPEG', quality=83)
+
+
 if __name__ == '__main__':
-    from PIL import Image
     img = Image.open("dataset/without_marker/20191205142548420_0001.jpg")
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, img.width, img.height)
     c = cairo.Context(surface)
