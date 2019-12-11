@@ -28,10 +28,9 @@ def get_pdf_html_or_static(filename):
             saved_markers = json.load(json_file)
         if saved_markers['filename'] != filename:
             saved_markers = {'rects': []}
-    for i in range(pdf.numPages):
+    for i in range(9, min(10, pdf.numPages)):
         html += "<div>"
-        html += "<canvas id=\"c_" + str(i) + "\"></canvas>"
-        html += "<img src=\"" + filename + "/" + str(i) + "\" />"
+        html += "<canvas id=\"cv" + str(i) + "\" width=\"0\" height=\"0\"></canvas>"
         if len(saved_markers['rects']) > i:
             html += str(saved_markers['rects'][i])
         html += "</div>"
