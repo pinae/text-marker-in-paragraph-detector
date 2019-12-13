@@ -16,7 +16,9 @@ def get_pdf_html_or_static(filename):
     if not path.isfile(path.join("dataset", "without_marker", filename)):
         return abort(400)
     pdf = PdfFileReader(open(path.join("dataset", "without_marker", filename), 'rb'))
-    html = "<html><head><title>Rects for " + filename + "</title>"
+    html = "<html lang=\"de\"><head>"
+    html += "<meta charset=\"UTF-8\" />"
+    html += "<title>Rects for " + filename + "</title>"
     html += "<link rel=\"stylesheet\" href=\"style.css\" />"
     html += "<link rel=\"icon\" href=\"favicon.ico\" type=\"image/x-icon\" />"
     html += "<script type=\"application/javascript\" src=\"fabric.min.js\"></script>"
@@ -38,7 +40,22 @@ def get_pdf_html_or_static(filename):
     return html
 
 
-@app.route('/<string:filename>/<int:page_no>', methods=['GET', 'POST'])
+@app.route('/rects/<string:filename>/<int:page_no>', methods=['GET', 'POST'])
+def get_rects(filename, page_no):
+    print(path.join('dataset', 'without_marker', filename.split('.')[0] + '.json'))
+    if not path.isfile(path.join('dataset', 'without_marker', filename.split('.')[0] + '.json')):
+        return abort(400)
+    with open(path.join('dataset', 'without_marker', filename.split('.')[0] + '.json'), 'r') as json_file:
+        jsd = json.load(json_file)
+        if 'filename' not in jsd or jsd['filename'] != filename:
+            return abort(400)
+        if 'rects' in jsd and len(jsd['rects']) > page_no:
+            return json.dumps(jsd['rects'][page_no])
+        else:
+            return json.dumps([])
+
+
+@app.route('/pdf/<string:filename>/<int:page_no>', methods=['GET', 'POST'])
 def get_pdf_img(filename, page_no):
     page_arr = extract_pdf_page(path.join('dataset', 'without_marker', filename), page_no)
     mem_file = BytesIO()
