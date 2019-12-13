@@ -1,3 +1,13 @@
+function addRectSettingsToDOM(pageNo, color, coordText) {
+    var container = document.getElementById('rects' + pageNo);
+    var ulNode = container.children[0];
+    var textNode = document.createTextNode(coordText);
+    var liNode = document.createElement('LI');
+    liNode.appendChild(textNode);
+    liNode.style.backgroundColor = color;
+    ulNode.appendChild(liNode);
+}
+
 function loadRects(canvas, rects, filename, pageNo) {
     var request = new XMLHttpRequest();
     request.open("GET","rects/" + filename + "/" + pageNo);
@@ -20,6 +30,7 @@ function loadRects(canvas, rects, filename, pageNo) {
                 canvas.add(newRect);
                 canvas.bringToFront(newRect);
                 canvas.renderAll();
+                addRectSettingsToDOM(pageNo, rectColor, json_rects[i]["rect"])
             }
         } else {
           console.warn(request.statusText, request.responseText);
